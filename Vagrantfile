@@ -10,7 +10,7 @@ Vagrant.configure("2") do |config|
     master.vm.network "public_network", ip: "10.0.0.10"
     master.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "/home/vagrant/.ssh/id_rsa.pub"
     master.vm.provision :shell, :inline => "cat /home/vagrant/.ssh/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys", run: "always"
-    master.vm.synced_folder "./k8s", "/home/vagrant/apps"
+    master.vm.synced_folder "./apps", "/home/vagrant/apps"
     master.vm.provider "virtualbox" do |v|
       v.memory = 4096
       v.cpus = 4

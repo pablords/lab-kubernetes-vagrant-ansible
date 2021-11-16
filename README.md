@@ -1,6 +1,7 @@
 ######
 comandos básicos
-link tutorial
+######
+link tutorial rede dns
 https://medium.com/@joatmon08/playing-with-kubeadm-in-vagrant-machines-36598b5e8408
 
 ######
