@@ -1,0 +1,66 @@
+---
+# tasks file for kubernetes
+
+- name: Iptables do seu nó Linux ver corretamente o tráfego em ponte
+  ansible.builtin.shell: |
+    cat <<EOF | tee /etc/modules-load.d/k8s.conf
+    br_netfilter
+    EOF
+    cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+    net.bridge.bridge-nf-call-ip6tables = 1
+    net.bridge.bridge-nf-call-iptables = 1
+    EOF
+    sysctl --system
+  args:
+    warn: no
+    
+- name: Baixe a chave de assinatura pública do Google Cloud
+  ansible.builtin.shell: curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+  args:
+    warn: no
+
+- name: Adicione o aptrepositório Kubernetes
+  ansible.builtin.shell: echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+  args:
+    warn: no
+
+- name: Atualize o aptíndice do pacote, instale o kubelet, kubeadm e kubectl e fixe suas versões
+  ansible.builtin.shell: |
+    sudo apt-get update
+    sudo apt-get install -y kubelet kubeadm kubectl
+    sudo apt-mark hold kubelet kubeadm kubectl
+  args:
+    warn: no
+
+- name: Iptables do seu nó Linux ver corretamente o tráfego em ponte
+  ansible.builtin.shell: |
+    cat <<EOF | tee /etc/modules-load.d/k8s.conf
+    br_netfilter
+    EOF
+    cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+    net.bridge.bridge-nf-call-ip6tables = 1
+    net.bridge.bridge-nf-call-iptables = 1
+    EOF
+    sysctl --system
+  args:
+    warn: no
+
+- name: configurando driver cgroup
+  ansible.builtin.shell: |
+    echo '{"exec-opts": ["native.cgroupdriver=systemd"]}' >> /etc/docker/daemon.json
+    systemctl restart docker
+    systemctl enable kubelet
+    systemctl start kubelet
+  args:
+    warn: no
+
+- name: Para desativar o SELinux e SAWP, execute os comandos belwo
+  ansible.builtin.shell: |
+    setenforce 0
+    sed -i ‘s/^SELINUX=enforcing$/SELINUX=permissive/’ /etc/selinux/config
+    sed -i ‘/swap/d’ /etc/fstab
+    swapoff -a
+  args:
+    warn: no
+
+

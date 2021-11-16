@@ -1,0 +1,4 @@
+---
+# vars file for teste
+remote_user: vagrant
+docker_group: docker

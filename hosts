@@ -1,0 +1,14 @@
+
+[servers]
+ubuntu ansible_ssh_host=10.0.0.10 
+
+
+
+[servers:vars]
+ansible_user=vagrant
+ansible_password=vagrant
+ansible_connection=ssh
+ansible_become=yes
+ansible_become_method=sudo
+ansible_become_user=root
+ansible_become_pass=vagrant

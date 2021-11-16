@@ -1,0 +1,14 @@
+---
+# defaults file for common
+common_packages_debian:
+  - build-essential
+  - net-tools
+  - bc
+  - sudo
+  - tcpdump
+  - ca-certificates
+  - curl
+  - gnupg
+  - lsb-release
+  - apt-transport-https
+
