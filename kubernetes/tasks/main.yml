@@ -13,7 +13,7 @@
     sysctl --system
   args:
     warn: no
-    
+
 - name: Baixe a chave de assinatura pública do Google Cloud
   ansible.builtin.shell: curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
   args:
@@ -62,5 +62,3 @@
     swapoff -a
   args:
     warn: no
-
-
