@@ -1,6 +1,7 @@
 
 [servers]
-ubuntu ansible_ssh_host=10.0.0.10 
+master-node ansible_ssh_host=10.0.0.10
+worker-node01 ansible_ssh_host=10.0.0.11
 
 
 
