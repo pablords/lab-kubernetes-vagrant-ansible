@@ -1,59 +1,60 @@
 
-BASE_BOX_URL = "ubuntu/bionic64"
-BASE_IP_MASTER = "10.0.0.10"
+BASE_BOX = "ubuntu/trusty64"
+MASTER_NAME = "cluster"
+MASTER_IP = "192.168.50.10"
+CIDR = "192.168.0.0/16"
+
 
 Vagrant.configure("2") do |config|
-
-  config.ssh.insert_key = false
-
-  config.vm.provision "shell", inline: <<-SHELL
-        apt-get update -y
-        echo "10.0.0.10  master-node" >> /etc/hosts
-        echo "10.0.0.11  worker-node01" >> /etc/hosts
-  SHELL
-
-  config.vm.define "master", primary: true do |master|
-    master.vm.box = BASE_BOX_URL
-    master.vm.hostname = "master-node"
-    master.vm.network "public_network", ip: BASE_IP_MASTER, bridge: "en0: Wi-Fi (AirPort)"
-    master.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "/home/vagrant/.ssh/id_rsa.pub"
-    master.vm.provision :shell, :inline => "cat /home/vagrant/.ssh/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys", run: "always"
-    master.vm.synced_folder "./apps", "/home/vagrant/apps"
-    master.vm.provider "virtualbox" do |v|
-      v.memory = 3048
-      v.cpus = 2
-      v.name = "master-node"
-    end
-
-    master.trigger.after :up do |trigger|
-      trigger.name = "Iniciar cluster Kubernetes"
-      trigger.info = "Cluster iniciado com sucesso!!"
-      master.vm.provision "shell", path: "kubernetes/cluster-init.sh"
-    end
-
-  end
+  config.vm.box = BASE_BOX
+  config.vm.box_check_update = false
+  config.ssh.insert_key = true
 
   (1..1).each do |i|
-    config.vm.define "node0#{i}" do |node|
-      node.vm.box = BASE_BOX_URL
-      node.vm.hostname = "worker-node0#{i}"
-      node.vm.network "public_network", ip: "10.0.0.1#{i}", bridge: "en0: Wi-Fi (AirPort)"
-      node.vm.provision "file", source: "~/.ssh/id_rsa.pub", destination: "/home/vagrant/.ssh/id_rsa.pub"
-      node.vm.provision :shell, :inline => "cat /home/vagrant/.ssh/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys", run: "always"
-      node.vm.synced_folder "./apps", "/home/vagrant/apps"
+    config.vm.define "node#{i}" do |node|
+      node.vm.hostname = "node#{i}"
+      node.vm.network "private_network", ip: "192.168.50.2#{i}"
       node.vm.provider "virtualbox" do |v|
-        v.memory = 3048
-        v.cpus = 2
-        v.name = "worker-node0#{i}"
+        v.name = "node#{i}"
       end
     end
   end
 
-  
-  config.vm.provision "ansible" do |ansible|
-    ansible.verbose = "v"
-    ansible.playbook = "playbook.yml"
+  config.vm.define MASTER_NAME do |master|
+    master.vm.hostname = MASTER_NAME
+    master.vm.network "private_network", ip: MASTER_IP
+    master.vm.synced_folder "./ansible", "/home/vagrant/ansible"
+    master.vm.synced_folder "./apps", "/home/vagrant/apps"
+    master.vm.provision :ansible_local do |ansible|
+      ansible.playbook          = "playbook.yml"
+      ansible.provisioning_path = "/home/vagrant/ansible"
+      ansible.verbose           = true
+      ansible.install           = true
+      ansible.limit             = "all" # or only "nodes" group, etc.
+      ansible.config_file       = "/home/vagrant/ansible/ansible.cfg"
+      ansible.extra_vars = {
+        ansible_ssh_user: "vagrant",
+        ansible_ssh_pass: "vagrant",
+        master_ip: MASTER_IP,
+        cidr: CIDR
+      }
+      ansible.host_vars = {
+        "node1" => {
+          "ansible_host" => "192.168.50.21"
+        }
+      }
+      ansible.groups = {
+        "nodes" => ["node1"],
+        "nodes:vars" => {
+          "node_ip" => "192.168.50.21"
+        }
+      }
+    end
+    master.vm.provider "virtualbox" do |v|
+      v.memory = 3048
+      v.cpus = 2
+      v.name = MASTER_NAME
+    end
   end
-
 
 end

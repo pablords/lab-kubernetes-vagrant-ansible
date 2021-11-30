@@ -5,3 +5,4 @@
     - common
     - docker
     - kubernetes
+  ignore_unreachable: no
