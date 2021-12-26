@@ -27,7 +27,7 @@ Vagrant.configure("2") do |config|
   config.ssh.insert_key = false
 
 
-  config.vm.define "master" do |master|
+  config.vm.define "#{MASTER_NAME}" do |master|
     master.vm.network "private_network", ip: MASTER_IP
     master.vm.hostname = MASTER_NAME
     master.vm.synced_folder "./apps", "/home/vagrant/apps"
