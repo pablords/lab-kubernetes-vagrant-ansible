@@ -12,11 +12,6 @@ vms = {
       :vm_cpu => 2, 
       :vm_ram => 1024, 
       :vm_ip => "192.168.50.21"
-  },
-  "node2" => {
-      :vm_cpu => 2, 
-      :vm_ram => 1024, 
-      :vm_ip => "192.168.50.22"
   }
 }
 
@@ -31,6 +26,8 @@ Vagrant.configure("2") do |config|
     master.vm.network "private_network", ip: MASTER_IP
     master.vm.hostname = MASTER_NAME
     master.vm.synced_folder "./apps", "/home/vagrant/apps"
+    master.vm.network "forwarded_port", guest: 30000, host: 30000
+    master.vm.network "forwarded_port", guest: 8080, host: 8080
     master.vm.provider "virtualbox" do |v|
       v.name = MASTER_NAME
       v.cpus = 2
