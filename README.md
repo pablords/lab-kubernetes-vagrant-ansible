@@ -1,21 +1,23 @@
-######
-  iniciar cluster 
-  sudo kubeadm init --apiserver-advertise-address 192.168.50.10 --pod-network-cidr=192.168.0.0/16 --control-plane-endpoint 192.168.50.10:6443
+<p align="center">
+  <a href="#-tecnologias">Tecnologias</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#-como-executar">Como executar</a>&nbsp;&nbsp;&nbsp;
+</p>
 
-######
-configurar kubeconfig
 
-  mkdir -p $HOME/.kube
-  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+<br>
 
-  kubectl apply -f https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/daemonset/kubeadm-kuberouter.yaml
+## ✨ Tecnologias
 
-######
-  criando token no cluster
+Esse projeto foi desenvolvido com as seguintes tecnologias:
 
-  kubeadm token create --print-join-command
-  ######
-  unindo node ao cluster
+- [Vagrant](https://www.vagrantup.com/)
+- [Ansible](https://www.ansible.com/)
+- [Docker](https://docs.docker.com/)
+- [Kubernetes](https://kubernetes.io/pt-br/)
 
-  kubeadm join 192.168.50.10:6443 --token by0aq1.imnmhenf8x8ollze --discovery-token-ca-cert-hash sha256:d0acb4f4c4a30b36bfb2c168b04f3578cb3a9eb25b42b1c2e5984ed6c87222d5
+## 💻  Como executar
+
+- Clone o repositório.
+- na raiz do projeto digite `vagrant up` e aguarde até que todas vms são provisionadas.
+- para acessar alguma vm é só digitar o comando `vagrant ssh ${nome_vm}`.
+
