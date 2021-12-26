@@ -1,72 +1,30 @@
----
-# tasks file for kubernetes
+- name: Add an apt signing key for Kubernetes
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
 
-- name: Iptables do seu nó Linux ver corretamente o tráfego em ponte
-  ansible.builtin.shell: |
-    cat <<EOF | tee /etc/modules-load.d/k8s.conf
-    br_netfilter
-    EOF
-    cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
-    net.bridge.bridge-nf-call-ip6tables = 1
-    net.bridge.bridge-nf-call-iptables = 1
-    EOF
-    sysctl --system
-  args:
-    warn: no
+- name: Adding apt repository for Kubernetes
+  apt_repository:
+    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+    filename: kubernetes.list
 
-- name: Baixe a chave de assinatura pública do Google Cloud
-  ansible.builtin.shell: curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
-  args:
-    warn: no
-
-- name: Adicione o aptrepositório Kubernetes
-  ansible.builtin.shell: echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-  args:
-    warn: no
-
-- name: Atualize o aptíndice do pacote, instale o kubelet, kubeadm e kubectl e fixe suas versões
-  ansible.builtin.shell: |
-    sudo apt-get update
-    sudo apt-get install -y kubelet kubeadm kubectl
-    sudo apt-mark hold kubelet kubeadm kubectl
-  args:
-    warn: no
-
-- name: Iptables do seu nó Linux ver corretamente o tráfego em ponte
-  ansible.builtin.shell: |
-    cat <<EOF | tee /etc/modules-load.d/k8s.conf
-    br_netfilter
-    EOF
-    cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
-    net.bridge.bridge-nf-call-ip6tables = 1
-    net.bridge.bridge-nf-call-iptables = 1
-    EOF
-    sysctl --system
-  args:
-    warn: no
-
-- name: configurando driver cgroup
-  ansible.builtin.shell: |
-    echo '{"exec-opts": ["native.cgroupdriver=systemd"]}' >> /etc/docker/daemon.json
-    systemctl restart docker
-    systemctl enable kubelet
-    systemctl start kubelet
-  args:
-    warn: no
-
-- name: Para desativar o SELinux e SAWP, execute os comandos belwo
-  ansible.builtin.shell: |
-    setenforce 0
-    sed -i ‘s/^SELINUX=enforcing$/SELINUX=permissive/’ /etc/selinux/config
-    sed -i ‘/swap/d’ /etc/fstab
-    swapoff -a
-  args:
-    warn: no
+- name: Install Kubernetes binaries
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+      - kubelet
+      - kubeadm
+      - kubectl
 
 - name: Configure node ip
   lineinfile:
+    create: yes
     path: /etc/default/kubelet
-    line: KUBELET_EXTRA_ARGS=--node-ip={{ node_ip }}
+    line: KUBELET_EXTRA_ARGS=--node-ip={{ master_ip }}
 
 - name: Restart kubelet
   service:
@@ -74,29 +32,35 @@
     daemon_reload: yes
     state: restarted
 
+- name: config cgGroup Docker
+  shell: |
+    echo '{ "exec-opts": ["native.cgroupdriver=systemd"] }' >> /etc/docker/daemon.json
+
+- name: Restart Docker
+  service:
+    name: docker
+    daemon_reload: yes
+    state: restarted
+
 - name: Initialize the Kubernetes cluster using kubeadm
-  command: kubeadm init --apiserver-advertise-address={{ master_ip }} --apiserver-cert-extra-sans={{ master_ip }}  --node-name cluster --pod-network-cidr={{ cidr }}
+  command: kubeadm init --apiserver-advertise-address={{ master_ip }} --apiserver-cert-extra-sans={{ master_ip }}  --node-name k8s-master --pod-network-cidr={{ cidr }}
 
 - name: Setup kubeconfig for vagrant user
   command: "{{ item }}"
   with_items:
     - mkdir -p /home/vagrant/.kube
-    - cp -i /etc/kubernetes/admin.conf /home/vagrant/.kube/config
-    - chown vagrant:vagrant /home/vagrant/.kube/config
+    - sudo cp -i /etc/kubernetes/admin.conf /home/vagrant/.kube/config
+    - sudo chown vagrant:vagrant /home/vagrant/.kube/config
 
 - name: Install calico pod network
   become: false
-  command: kubectl create -f https://docs.projectcalico.org/v3.4/getting-started/kubernetes/installation/hosted/calico.yaml
+  command: kubectl apply -f https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/daemonset/kubeadm-kuberouter.yaml
 
 - name: Generate join command
   command: kubeadm token create --print-join-command
   register: join_command
 
 - name: Copy join command to local file
+  become: false
   local_action: copy content="{{ join_command.stdout_lines[0] }}" dest="./join-command"
 
-- name: Copy the join command to server location
-  copy: src=join-command dest=/tmp/join-command.sh mode=0777
-
-- name: Join the node to cluster
-  command: sh /tmp/join-command.sh

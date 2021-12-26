@@ -1,14 +1,10 @@
 ######
-comandos básicos
-######
-link tutorial rede dns
-https://medium.com/@joatmon08/playing-with-kubeadm-in-vagrant-machines-36598b5e8408
+  iniciar cluster 
+  sudo kubeadm init --apiserver-advertise-address 192.168.50.10 --pod-network-cidr=192.168.0.0/16 --control-plane-endpoint 192.168.50.10:6443
 
 ######
-iniciar cluster com ip publico
-sudo kubeadm init --apiserver-advertise-address 10.0.0.10 --pod-network-cidr=10.1.0.0/16 --control-plane-endpoint 10.0.0.10:6443
+configurar kubeconfig
 
-######
   mkdir -p $HOME/.kube
   sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
   sudo chown $(id -u):$(id -g) $HOME/.kube/config
@@ -16,7 +12,10 @@ sudo kubeadm init --apiserver-advertise-address 10.0.0.10 --pod-network-cidr=10.
   kubectl apply -f https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/daemonset/kubeadm-kuberouter.yaml
 
 ######
-Isolamento de nó de plano de controle 
-Por padrão, seu cluster não agendará pods no nó do plano de controle por motivos de segurança. Se você quiser agendar pods no nó do plano de controle, por exemplo, para um cluster Kubernetes de máquina única para desenvolvimento, execute:
+  criando token no cluster
 
-kubectl taint nodes --all node-role.kubernetes.io/master-
+  kubeadm token create --print-join-command
+  ######
+  unindo node ao cluster
+
+  kubeadm join 192.168.50.10:6443 --token by0aq1.imnmhenf8x8ollze --discovery-token-ca-cert-hash sha256:d0acb4f4c4a30b36bfb2c168b04f3578cb3a9eb25b42b1c2e5984ed6c87222d5

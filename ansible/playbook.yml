@@ -3,6 +3,20 @@
   become: yes
   roles: 
     - common
+  ignore_unreachable: no
+
+- name: Masters Playbook - Starting Deploy
+  hosts: masters
+  become: yes
+  roles: 
     - docker
     - kubernetes
+  ignore_unreachable: no
+
+- name: Nodes Playbook - Starting Deploy
+  hosts: nodes
+  become: yes
+  roles: 
+    - docker
+    - kubernetes-nodes
   ignore_unreachable: no

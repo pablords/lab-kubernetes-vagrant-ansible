@@ -1,2 +1,4 @@
 *.log
 .vagrant
+/ansible/join-command
+
