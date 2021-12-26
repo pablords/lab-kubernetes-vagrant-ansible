@@ -1,5 +1,6 @@
 
 BASE_BOX = "bento/ubuntu-16.04"
+IMAGE_VERSION = "202112.19.0"
 MASTER_NAME = "master"
 MASTER_IP = "192.168.50.10"
 ANSIBLE_NAME = "ansible-server"
@@ -18,6 +19,7 @@ vms = {
 
 Vagrant.configure("2") do |config|
   config.vm.box = BASE_BOX
+  config.vm.box_version = IMAGE_VERSION
   config.vm.box_check_update = false
   config.ssh.insert_key = false
 
