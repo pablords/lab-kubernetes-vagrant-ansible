@@ -52,7 +52,7 @@
     - sudo cp -i /etc/kubernetes/admin.conf /home/vagrant/.kube/config
     - sudo chown vagrant:vagrant /home/vagrant/.kube/config
 
-- name: Install calico pod network
+- name: Install kube-router pod network
   become: false
   command: kubectl apply -f https://raw.githubusercontent.com/cloudnativelabs/kube-router/master/daemonset/kubeadm-kuberouter.yaml
 
