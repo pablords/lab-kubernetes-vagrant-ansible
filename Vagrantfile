@@ -28,8 +28,6 @@ Vagrant.configure("2") do |config|
     master.vm.network "private_network", ip: MASTER_IP
     master.vm.hostname = MASTER_NAME
     master.vm.synced_folder "./apps", "/home/vagrant/apps"
-    master.vm.network "forwarded_port", guest: 30000, host: 30000
-    master.vm.network "forwarded_port", guest: 8080, host: 8080
     master.vm.provider "virtualbox" do |v|
       v.name = MASTER_NAME
       v.cpus = 2
@@ -61,7 +59,7 @@ Vagrant.configure("2") do |config|
       ansible.install           = true
       ansible.limit             = "all" # or only "nodes" group, etc.
       ansible.config_file       = "/home/vagrant/ansible/ansible.cfg"
-      ansible.inventory_path    = "inventory"
+      ansible.inventory_path    = "hosts"
       ansible.compatibility_mode = "2.0"
       vms.each do | vm_name, vm_params |
         ansible.extra_vars = {
