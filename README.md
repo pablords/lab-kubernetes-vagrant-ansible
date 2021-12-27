@@ -14,10 +14,13 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 - [Ansible](https://www.ansible.com/)
 - [Docker](https://docs.docker.com/)
 - [Kubernetes](https://kubernetes.io/pt-br/)
+- [VitualBox](https://www.virtualbox.org/)
 
 ## 💻  Como executar
 
 - Clone o repositório.
-- na raiz do projeto digite `vagrant up` e aguarde até que todas vms são provisionadas.
-- para acessar alguma vm é só digitar o comando `vagrant ssh ${nome_vm}`.
+- Na raiz do projeto digite `vagrant up` e aguarde até que todas vms são provisionadas.
+- Para acessar alguma vm é só digitar o comando `vagrant ssh ${nome_vm}`.
+- Para rodar a aplicacão de teste Wordpress com Mysql, `cd /home/vagrant/apps && kubectl apply -k .`
+- Aguarde subir os pods, e acesse `http://192.168.50.10:30000`
 
