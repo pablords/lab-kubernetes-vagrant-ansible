@@ -21,7 +21,7 @@
       - kubectl
 
 - name: delete kubelet if exists
-  shell: rm -rf /etc/default/kubelet
+  shell: sudo rm -rf /etc/default/kubelet
 
 - name: Configure node ip
   lineinfile:
@@ -48,21 +48,21 @@
     state: restarted
 
 - name: reset kubeadm
-  command: kubeadm reset -f
+  command: sudo kubeadm reset -f
 
 - name: Initialize the Kubernetes cluster using kubeadm
   command: kubeadm init --apiserver-advertise-address={{ ansible_eth1.ipv4.address }} --apiserver-cert-extra-sans={{ ansible_eth1.ipv4.address }}  --node-name k8s-master --pod-network-cidr={{ ansible_eth1.ipv4.network }}/16
   when: ansible_nodename ==  "master"
 
 - name: delete if exists kubeConfig
-  command: rm -rf -p /home/vagrant/.kube
+  shell: rm -rf /home/vagrant/.kube
 
 - name: Setup kubeconfig for vagrant user
   command: "{{ item }}"
   with_items:
-    - mkdir -p /home/vagrant/.kube
-    - cp -i /etc/kubernetes/admin.conf /home/vagrant/.kube/config
-    - chown vagrant:vagrant /home/vagrant/.kube/config
+    - sudo mkdir -p /home/vagrant/.kube
+    - sudo cp -i /etc/kubernetes/admin.conf /home/vagrant/.kube/config
+    - sudo chown vagrant:vagrant /home/vagrant/.kube/config
 
 - name: Install kube-router pod network
   become: false

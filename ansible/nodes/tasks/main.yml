@@ -19,6 +19,9 @@
       - kubelet
       - kubeadm
       - kubectl
+
+- name: reset kubeadm if exists
+  command: sudo kubeadm reset -f
   
 - name: delete kubelet if exists
   shell: rm -rf /etc/default/kubelet
