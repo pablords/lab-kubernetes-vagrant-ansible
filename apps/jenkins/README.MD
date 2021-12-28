@@ -1,6 +1,11 @@
 ####
 https://www.digitalocean.com/community/tutorials/how-to-install-jenkins-on-kubernetes
 
-###
+kubectl get pods --all-namespaces
 
-https://ichi.pro/pt/como-configurar-jenkins-escalonaveis-no-kubernetes-270212361632205
+kubectl create namespace {namespace}
+
+kubectl get pods --namespace {namespace}
+
+kubectl get nodes -o wide
+

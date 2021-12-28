@@ -2,33 +2,27 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: jenkins
-  namespace: jenkins
-  labels:
-    app: jenkins
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: jenkins
-  replicas: 1
   template:
     metadata:
       labels:
         app: jenkins
     spec:
       containers:
-        - name: jenkins-master
-          image: jenkins
-          resources:
+        - name: jenkins
+          image: jenkins/jenkins
           ports:
             - name: http-port
               containerPort: 8080
             - name: jnlp-port
               containerPort: 50000
           volumeMounts:
-            - name: localtime
+            - name: jenkins-vol
               mountPath: /var/jenkins_vol
       volumes:
         - name: jenkins-vol
           emptyDir: {}
----
-
