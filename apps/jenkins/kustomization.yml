@@ -1,0 +1,4 @@
+resources:
+  - jenkins-deployment.yml
+  - jenkins-service.yml
+  - jenkins-ingress.yml
