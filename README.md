@@ -6,6 +6,13 @@
 
 <br>
 
+<p align="center">
+  <img alt="print" src=".github/teste.png" width="100%">
+</p>
+
+
+<br>
+
 ## ✨ Tecnologias
 
 Esse projeto foi desenvolvido com as seguintes tecnologias:
