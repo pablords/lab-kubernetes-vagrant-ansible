@@ -10,7 +10,7 @@
   become: yes
   roles: 
     - docker
-    - kubernetes
+    - master
   ignore_unreachable: no
 
 - name: Nodes Playbook - Starting Deploy
@@ -18,5 +18,5 @@
   become: yes
   roles: 
     - docker
-    - kubernetes-nodes
+    - nodes
   ignore_unreachable: no

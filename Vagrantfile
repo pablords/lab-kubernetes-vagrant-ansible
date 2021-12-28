@@ -5,14 +5,18 @@ MASTER_NAME = "master"
 MASTER_IP = "192.168.50.10"
 ANSIBLE_NAME = "ansible-server"
 ANSIBLE_IP = "192.168.50.15"
-CIDR = "192.168.0.0/16"
 
 
 vms = {
   "node1" => {
-      :vm_cpu => 2, 
+      :vm_cpu => 1, 
       :vm_ram => 1024, 
       :vm_ip => "192.168.50.21"
+  },
+  "node2" => {
+    :vm_cpu => 1, 
+    :vm_ram => 1024, 
+    :vm_ip => "192.168.50.22"
   }
 }
 
@@ -31,7 +35,7 @@ Vagrant.configure("2") do |config|
     master.vm.provider "virtualbox" do |v|
       v.name = MASTER_NAME
       v.cpus = 2
-      v.memory = 2048
+      v.memory = 4096
     end
   end
 
@@ -60,17 +64,10 @@ Vagrant.configure("2") do |config|
       ansible.limit             = "all" # or only "nodes" group, etc.
       ansible.config_file       = "/home/vagrant/ansible/ansible.cfg"
       ansible.inventory_path    = "hosts"
-      ansible.compatibility_mode = "2.0"
-      vms.each do | vm_name, vm_params |
-        ansible.extra_vars = {
-          node_ip: "#{vm_params[:vm_ip]}",
-          master_ip: MASTER_IP,
-          cidr: CIDR
-        }
-      end
+      ansible.compatibility_mode = "2.0"  
     end
     server.vm.provider "virtualbox" do |v|
-      v.memory = 1024
+      v.memory = 2048
       v.cpus = 2
       v.name = ANSIBLE_NAME
     end

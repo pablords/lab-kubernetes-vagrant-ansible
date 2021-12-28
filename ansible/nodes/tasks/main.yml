@@ -19,12 +19,16 @@
       - kubelet
       - kubeadm
       - kubectl
+  
+- name: delete kubelet if exists
+  shell: rm -rf /etc/default/kubelet
 
 - name: Configure node ip
   lineinfile:
     create: yes
     path: /etc/default/kubelet
-    line: KUBELET_EXTRA_ARGS=--node-ip={{ node_ip }}
+    line: KUBELET_EXTRA_ARGS=--node-ip={{ansible_eth1.ipv4.address}}
+  when: ansible_nodename !=  "master"
 
 - name: Restart kubelet
   service:
@@ -34,6 +38,7 @@
 
 - name: config cgGroup Docker
   shell: |
+    echo " " >> /etc/docker/daemon.json
     echo '{ "exec-opts": ["native.cgroupdriver=systemd"] }' >> /etc/docker/daemon.json
 
 - name: Restart Docker
@@ -47,5 +52,3 @@
 
 - name: Join the node to cluster
   command: sh /tmp/join-command.sh
-
-
