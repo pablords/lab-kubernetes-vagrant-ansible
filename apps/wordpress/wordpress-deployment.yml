@@ -1,7 +1,8 @@
-apiVersion: v1 
+apiVersion: v1
 kind: Service
 metadata:
   name: wordpress
+  namespace: wordpress
   labels:
     app: wordpress
 spec:
@@ -17,16 +18,16 @@ spec:
 
 ---
 
-      
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: wordpress
+  namespace: wordpress
   labels:
     app: wordpress
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: wordpress
@@ -40,17 +41,14 @@ spec:
         tier: frontend
     spec:
       containers:
-      - image: wordpress:4.8-apache
-        name: wordpress
-        env:
-        - name: WORDPRESS_DB_HOST
-          value: wordpress-mysql
-        - name: WORDPRESS_DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-pass
-              key: password
-        ports:
-        - containerPort: 80
+        - image: wordpress:4.8-apache
           name: wordpress
-
+          resources:
+          env:
+            - name: WORDPRESS_DB_HOST
+              value: wordpress-mysql
+            - name: WORDPRESS_DB_PASSWORD
+              value: "123456"
+          ports:
+            - containerPort: 80
+              name: wordpress

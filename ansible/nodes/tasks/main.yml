@@ -41,7 +41,8 @@
 
 - name: config cgGroup Docker
   shell: |
-    echo " " >> /etc/docker/daemon.json
+    rm -rf /etc/docker/daemon.json
+    touch /etc/docker/daemon.json
     echo '{ "exec-opts": ["native.cgroupdriver=systemd"] }' >> /etc/docker/daemon.json
 
 - name: Restart Docker

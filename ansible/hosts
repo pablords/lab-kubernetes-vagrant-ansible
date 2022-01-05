@@ -1,12 +1,14 @@
 master ansible_host=192.168.50.10 ansible_ssh_private_key_file=/vagrant/.vagrant/machines/master/virtualbox/private_key 
 node1  ansible_host=192.168.50.21 ansible_ssh_private_key_file=/vagrant/.vagrant/machines/node1/virtualbox/private_key  
-node2  ansible_host=192.168.50.22 ansible_ssh_private_key_file=/vagrant/.vagrant/machines/node2/virtualbox/private_key  
+node2  ansible_host=192.168.50.22 ansible_ssh_private_key_file=/vagrant/.vagrant/machines/node2/virtualbox/private_key
 
-[masters]
+
+[masters] 
 master
 
 [nodes]
 node[1:2]
+
 
 [all:vars]
 ansible_connection=ssh

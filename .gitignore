@@ -1,4 +1,6 @@
 *.log
 .vagrant
 /ansible/join-command
+/apps/jenkins/data
+/apps/jenkins/backup
 

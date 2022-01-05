@@ -67,7 +67,7 @@ Vagrant.configure("2") do |config|
       ansible.compatibility_mode = "2.0"  
     end
     server.vm.provider "virtualbox" do |v|
-      v.memory = 2048
+      v.memory = 1024
       v.cpus = 2
       v.name = ANSIBLE_NAME
     end
