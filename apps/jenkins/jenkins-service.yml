@@ -3,12 +3,14 @@ kind: Service
 metadata:
   name: jenkins
   namespace: jenkins
+  labels:
+    app: jenkins
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - port: 8080
       targetPort: 8080
-      nodePort: 30001
+      #nodePort: 30001
   selector:
     app: jenkins
 

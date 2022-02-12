@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: jenkins
   namespace: jenkins
+  labels:
+    app: jenkins
 spec:
   selector:
     matchLabels:
@@ -15,6 +17,7 @@ spec:
       containers:
         - name: jenkins
           image: jenkins/jenkins
+          resources:
           ports:
             - name: http-port
               containerPort: 8080
