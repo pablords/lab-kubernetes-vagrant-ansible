@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: wordpress-mysql
-  namespace: wordpress
+  namespace: devops
   labels:
     app: wordpress
 spec:
@@ -20,7 +20,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: wordpress-mysql
-  namespace: wordpress
+  namespace: devops
   labels:
     app: wordpress
 spec:

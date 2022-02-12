@@ -1,5 +1,5 @@
 resources:
-  - jenkins-deployment.yml
-  - jenkins-service.yml
+  - deployment.yml
+  - service.yml
   - role.yml
   - namespace.yml

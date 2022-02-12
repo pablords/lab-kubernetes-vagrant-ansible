@@ -2,6 +2,7 @@ apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
   name: jenkins
+  namespace: devops
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

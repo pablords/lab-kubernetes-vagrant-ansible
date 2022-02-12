@@ -1,4 +1,3 @@
 resources:
   - mysql-deployment.yml
   - wordpress-deployment.yml
-  - namespace.yml
