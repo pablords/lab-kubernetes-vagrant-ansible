@@ -27,6 +27,13 @@ spec:
           volumeMounts:
             - name: jenkins-vol
               mountPath: /var/jenkins_home
+          env:
+            - name: KUBERNETES_SERVER_URL
+              value: ""
+            - name: JENKINS_SERVER_URL
+              value: jenkins.devops.svc.cluster.local:8080
+            - name: JENKINS_TUNNEL_URL
+              value: jenkins-jnlp.devops.svc.cluster.local:50000
       volumes:
         - name: jenkins-vol
           persistentVolumeClaim:
