@@ -16,11 +16,3 @@ spec:
             name: jenkins
             port:
               number: 8080
-
-      - path: /wordpress
-        pathType: Prefix
-        backend:
-          service:
-            name: wordpress
-            port:
-              number: 8081

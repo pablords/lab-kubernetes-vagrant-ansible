@@ -6,6 +6,7 @@ metadata:
   labels:
     app: jenkins
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: jenkins
@@ -16,7 +17,7 @@ spec:
     spec:
       containers:
         - name: jenkins
-          image: jenkins/jenkins
+          image: pablords/jenkins-as-code:1.0.2
           resources:
           ports:
             - name: http-port
@@ -25,7 +26,11 @@ spec:
               containerPort: 50000
           volumeMounts:
             - name: jenkins-vol
-              mountPath: /var/jenkins_vol
+              mountPath: /var/jenkins_home
       volumes:
         - name: jenkins-vol
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: jenkins-pvc
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 0

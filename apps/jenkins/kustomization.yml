@@ -2,4 +2,5 @@ resources:
   - deployment.yml
   - service.yml
   - role.yml
-  - namespace.yml
+  - pv.yml
+  - pvc.yml
