@@ -76,3 +76,26 @@
 - name: Copy join command to local file
   become: false
   local_action: copy content="{{ join_command.stdout_lines[0] }}" dest="./join-command"
+
+
+- name: Install MetalLB
+  become: false
+  command: "{{ item }}"
+  with_items:
+    - kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/namespace.yaml 
+    - kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/metallb.yaml
+
+- name: Configure MetalLB
+  become: false
+  command: kubectl apply -f /home/vagrant/apps/config/metallb/main.yml
+
+- name: Configure Ingress NGINX
+  become: false
+  command: kubectl apply -k /home/vagrant/apps/config/ingress/
+
+
+- name: install helm
+  shell: |
+    curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+    chmod 700 get_helm.sh
+    ./get_helm.sh

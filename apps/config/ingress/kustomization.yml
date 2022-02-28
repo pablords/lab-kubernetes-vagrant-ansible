@@ -1,3 +1,4 @@
 resources:
+  - service.yml
   - namespace.yml
   - ingress.yml

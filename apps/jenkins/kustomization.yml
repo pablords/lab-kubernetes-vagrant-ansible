@@ -1,6 +1,0 @@
-resources:
-  - deployment.yml
-  - service.yml
-  - role.yml
-  - pv.yml
-  - pvc.yml
