@@ -1,3 +1,5 @@
 resources:
+  - namespace.yml
   - mysql-deployment.yml
   - wordpress-deployment.yml
+  - ingress.yml

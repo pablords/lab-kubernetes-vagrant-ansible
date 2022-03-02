@@ -10,12 +10,12 @@ ANSIBLE_IP = "192.168.50.15"
 vms = {
   "node1" => {
       :vm_cpu => 1, 
-      :vm_ram => 1024, 
+      :vm_ram => 1536, 
       :vm_ip => "192.168.50.21"
   },
   "node2" => {
     :vm_cpu => 1, 
-    :vm_ram => 1024, 
+    :vm_ram => 1536, 
     :vm_ip => "192.168.50.22"
   }
 }
@@ -67,7 +67,7 @@ Vagrant.configure("2") do |config|
       ansible.compatibility_mode = "2.0"  
     end
     server.vm.provider "virtualbox" do |v|
-      v.memory = 1024
+      v.memory = 1536
       v.cpus = 2
       v.name = ANSIBLE_NAME
     end
