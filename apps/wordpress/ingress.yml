@@ -2,17 +2,17 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress
-  namespace: devops
+  namespace: wordpress
 spec:
   ingressClassName: nginx
   rules:
-  - host: dev.devops.com.br
+  - host: dev.wordpress.com.br
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: jenkins
+            name: wordpress
             port:
-              number: 8080
+              number: 80
