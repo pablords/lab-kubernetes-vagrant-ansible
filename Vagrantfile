@@ -30,6 +30,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "#{MASTER_NAME}" do |master|
     master.vm.network "private_network", ip: MASTER_IP
+    master.vm.network "forwarded_port", guest: 8080, host: 8080
     master.vm.hostname = MASTER_NAME
     master.vm.synced_folder "./apps", "/home/vagrant/apps"
     master.vm.provider "virtualbox" do |v|
