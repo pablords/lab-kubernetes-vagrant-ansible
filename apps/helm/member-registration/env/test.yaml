@@ -1,0 +1,11 @@
+image:
+  repository: pablords/member-registration
+  tag: 2.0.0
+  imagePullPolicy: IfNotPresent
+replicaCount: 1
+service:
+  type: NodePort
+  port: 3001
+  nodePort: 30020
+  name: api
+  protocol: TCP
