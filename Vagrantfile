@@ -10,12 +10,12 @@ ANSIBLE_IP = "192.168.50.15"
 vms = {
   "node1" => {
       :vm_cpu => 1, 
-      :vm_ram => 1536, 
+      :vm_ram => 1024, 
       :vm_ip => "192.168.50.21"
   },
   "node2" => {
     :vm_cpu => 1, 
-    :vm_ram => 1536, 
+    :vm_ram => 1024, 
     :vm_ip => "192.168.50.22"
   }
 }
@@ -31,12 +31,13 @@ Vagrant.configure("2") do |config|
   config.vm.define "#{MASTER_NAME}" do |master|
     master.vm.network "private_network", ip: MASTER_IP
     master.vm.network "forwarded_port", guest: 8080, host: 8080
+    master.vm.network "forwarded_port", guest: 8081, host: 8081
     master.vm.hostname = MASTER_NAME
     master.vm.synced_folder "./apps", "/home/vagrant/apps"
     master.vm.provider "virtualbox" do |v|
       v.name = MASTER_NAME
       v.cpus = 2
-      v.memory = 4096
+      v.memory = 4048
     end
   end
 
@@ -68,7 +69,7 @@ Vagrant.configure("2") do |config|
       ansible.compatibility_mode = "2.0"  
     end
     server.vm.provider "virtualbox" do |v|
-      v.memory = 1536
+      v.memory = 1024
       v.cpus = 2
       v.name = ANSIBLE_NAME
     end

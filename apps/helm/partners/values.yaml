@@ -1,5 +1,5 @@
 image:
-  repository: pablords/member-registration
+  repository: pablords/partners
   tag: 2.0.0
   imagePullPolicy: IfNotPresent
 replicaCount: 1
