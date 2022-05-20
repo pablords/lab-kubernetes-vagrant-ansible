@@ -6,3 +6,4 @@
 /apps/jenkins-as-code
 /apps/member-registration
 /apps/nifi/*
+/apache-kafka
