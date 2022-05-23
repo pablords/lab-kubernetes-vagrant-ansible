@@ -1,0 +1,22 @@
+- name: Default Playbook - Starting Deploy
+  hosts: all
+  become: true
+  roles: 
+    - common
+  ignore_unreachable: false
+
+- name: Masters Playbook - Starting Deploy
+  hosts: masters
+  become: true
+  roles: 
+    - docker
+    - master
+  ignore_unreachable: true
+
+- name: Nodes Playbook - Starting Deploy
+  hosts: nodes
+  become: true
+  roles: 
+    - docker
+    - nodes
+  ignore_unreachable: false

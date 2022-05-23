@@ -1,0 +1,8 @@
+---
+# defaults file for common
+common_packages_debian:
+  - build-essential
+  - lsb-release
+
+
+

@@ -1,0 +1,63 @@
+- name: Add an apt signing key for Kubernetes
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: Adding apt repository for Kubernetes
+  apt_repository:
+    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+    filename: kubernetes.list
+
+- name: Install Kubernetes binaries
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+      - kubelet
+      - kubeadm
+      - kubectl
+
+- name: reset kubeadm if exists
+  command: sudo kubeadm reset -f
+  
+- name: delete kubelet if exists
+  shell: rm -rf /etc/default/kubelet
+
+- name: Configure node ip
+  lineinfile:
+    create: yes
+    path: /etc/default/kubelet
+    line: KUBELET_EXTRA_ARGS=--node-ip={{ansible_eth1.ipv4.address}}
+  when: ansible_nodename !=  "master"
+
+- name: Restart kubelet
+  service:
+    name: kubelet
+    daemon_reload: yes
+    state: restarted
+
+- name: config cgGroup Docker
+  shell: |
+    rm -rf /etc/docker/daemon.json
+    touch /etc/docker/daemon.json
+    echo '{ "exec-opts": ["native.cgroupdriver=systemd"] }' >> /etc/docker/daemon.json
+
+- name: Restart Docker
+  service:
+    name: docker
+    daemon_reload: yes
+    state: restarted
+
+- name: remove /etc/containerd/config.toml (CORRIGE ERRO KUBEADM INIT)
+  shell: |
+    sudo rm /etc/containerd/config.toml
+    systemctl restart containerd
+
+- name: Copy the join command to server location
+  copy: src=join-command dest=/tmp/join-command.sh mode=0777
+
+- name: Join the node to cluster
+  command: sh /tmp/join-command.sh

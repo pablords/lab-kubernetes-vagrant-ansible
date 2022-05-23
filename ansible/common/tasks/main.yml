@@ -1,0 +1,18 @@
+---
+# tasks file for common
+- name: Update System Debian
+  apt: update_cache=yes upgrade=yes
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Debian Like | Update System
+  apt: name="*" state=latest
+  when: ansible_distribution == "Ubuntu"
+
+- name: Debian Like | Install common packages
+  apt: name={{ common_packages_debian }} state=latest
+  when: ansible_distribution == "Ubuntu"
+
+
+
+
+
