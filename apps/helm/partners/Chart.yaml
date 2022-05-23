@@ -1,0 +1,7 @@
+apiVersion: v1
+name: partners
+version: v1.0
+description: api de gerenciamento de socios
+maintainers: 
+  - name: Pablo Ruan
+    email: pablords@gmail.com
