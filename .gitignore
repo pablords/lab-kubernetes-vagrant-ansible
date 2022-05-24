@@ -1,12 +1,5 @@
 *.log
 .vagrant
 /ansible/join-command
-/apps/jenkins/data
-/apps/jenkins/backup
-/apps/jenkins-as-code
-/apps/member-registration
-/apps/helm
-/apps/estudos
-/apps/apache-kafka
-/apps/helm
+
 

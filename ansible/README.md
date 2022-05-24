@@ -12,8 +12,6 @@ Caso nao consiga listar inventario, executar o seguinte comando
 export ANSIBLE_HOST_KEY_CHECKING=False && ansible-playbook -i
 
 
-
-
 ######
 
 correcao erro kubeadm init {COMENTAR disabled_plugins}
