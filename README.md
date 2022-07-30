@@ -29,6 +29,6 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 - Na raiz do projeto digite `vagrant up` e aguarde até que todas vms são provisionadas.
 - Para acessar alguma vm é só digitar o comando `vagrant ssh {nome_vm}`.
 - Em sua maquina Local aponte o ip 127.0.0.1 para `dev.wordpress.com.br` em /etc/hosts no linux e mac
-- Para rodar a aplicacão de teste Wordpress com Mysql acesse a vm master e digite o comando: `cd /home/vagrant/apps/wordpress && kubectl apply -k .`
+- Para rodar a aplicacão de teste Wordpress com Mysql acesse a vm master e digite o comando: `cd /home/vagrant/shared/wordpress && kubectl apply -k .`
 - Aguarde subir os pods e acesse `http://dev.wordpress.com.br`
 

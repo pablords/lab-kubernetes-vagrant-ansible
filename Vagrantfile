@@ -64,7 +64,7 @@ Vagrant.configure("2") do |config|
       ansible.install           = true
       ansible.limit             = "all" # or only "nodes" group, etc.
       ansible.config_file       = "/home/vagrant/ansible/ansible.cfg"
-      ansible.inventory_path    = "hosts"
+      ansible.inventory_path    = "hosts.yml"
       ansible.compatibility_mode = "2.0"  
     end
     server.vm.provider "virtualbox" do |v|

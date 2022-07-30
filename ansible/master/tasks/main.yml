@@ -92,11 +92,11 @@
 
 - name: Configure MetalLB
   become: false
-  command: kubectl apply -f /home/vagrant/apps/k8s/config/metallb/main.yml
+  command: kubectl apply -f /home/vagrant/shared/k8s/config/metallb/main.yml
 
 - name: Configure Ingress NGINX
   become: false
-  command: kubectl apply -k /home/vagrant/apps/k8s/config/ingress/
+  command: kubectl apply -k /home/vagrant/shared/k8s/config/ingress/
 
 
 - name: install helm
