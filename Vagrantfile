@@ -2,13 +2,20 @@
 BASE_BOX = "bento/ubuntu-16.04"
 IMAGE_VERSION = "202112.19.0"
 MASTER_NAME = "master"
+<<<<<<< HEAD
 MASTER_IP = "192.168.50.10"
 ANSIBLE_NAME = "ansible-server"
 ANSIBLE_IP = "192.168.50.15"
+=======
+MASTER_IP = "192.168.56.10"
+ANSIBLE_NAME = "ansible-server"
+ANSIBLE_IP = "192.168.56.15"
+>>>>>>> 57d5a5a (feat: updated all)
 
 
 vms = {
   "node1" => {
+<<<<<<< HEAD
       :vm_cpu => 1, 
       :vm_ram => 1024, 
       :vm_ip => "192.168.50.21"
@@ -18,6 +25,17 @@ vms = {
     :vm_ram => 1024, 
     :vm_ip => "192.168.50.22"
   }
+=======
+      :vm_cpu => 2, 
+      :vm_ram => 4048, 
+      :vm_ip => "192.168.56.21"
+  },
+  # "node2" => {
+  #   :vm_cpu => 1, 
+  #   :vm_ram => 3048, 
+  #   :vm_ip => "192.168.56.22"
+  # }
+>>>>>>> 57d5a5a (feat: updated all)
 }
 
 
@@ -36,7 +54,7 @@ Vagrant.configure("2") do |config|
     master.vm.provider "virtualbox" do |v|
       v.name = MASTER_NAME
       v.cpus = 2
-      v.memory = 4048
+      v.memory = 3048
     end
   end
 

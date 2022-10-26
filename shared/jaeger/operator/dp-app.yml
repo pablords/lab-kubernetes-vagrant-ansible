@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hotrod
+  annotations:
+    "sidecar.jaegertracing.io/inject": "true"
+spec:
+  selector:
+    matchLabels:
+      app: hotrod
+  template:
+    metadata:
+      labels:
+        app: hotrod
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+        - image: jaegertracing/example-hotrod:latest
+          name: hotrod
+          args: [ "-m", "prometheus", "all" ]
+          ports:
+            - containerPort: 8080
+              name: ui-port
+            - containerPort: 8083
+              name: backend-port
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: hotrod-service
+  labels:
+    app: hotrod
+spec:
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      name: ui-port
+
+    - protocol: TCP
+      port: 8083
+      targetPort: 8083
+      name: backend-port
+
+  selector:
+    app: hotrod

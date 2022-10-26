@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hotrod
+spec:
+  selector:
+    matchLabels:
+      app: hotrod
+  template:
+    metadata:
+      labels:
+        app: hotrod
+    spec:
+      containers:
+
+        - image: pablords/aiops-telemetry:latest
+          name:  vivo-aiops-telemetry
+          imagePullPolicy: Always
+          env:
+            - name: JAEGER_HOST_AGENT
+              value: jaeger-daemonset-service
+            - name: JAEGER_AGENT_PORT
+              value: "6832"
+          ports:
+            - containerPort: 3000
+              name: api-port
+          resources:
+            limits:
+              cpu: 200m
+            requests:
+              cpu: 100m
+
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: hotrod-service
+  labels:
+    app: hotrod
+spec:
+  type: LoadBalancer
+  #loadBalancerIP: 23.99.177.90
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+      name: api-port
+  selector:
+    app: hotrod
+

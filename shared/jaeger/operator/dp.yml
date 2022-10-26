@@ -1,0 +1,17 @@
+apiVersion: jaegertracing.io/v1
+kind: Jaeger
+metadata:
+  name: with-cassandra
+spec:
+  strategy: production
+  storage:
+    type: cassandra
+    options:
+      cassandra:
+        # Note: This assumes cassandra is running in the "default" namespace.
+        servers: casandra-service
+        keyspace: jaeger_v1_dc1
+    cassandraCreateSchema:
+      datacenter: "dc1"
+      mode: "test"
+      timeout: "3m"

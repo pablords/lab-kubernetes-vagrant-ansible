@@ -1,0 +1,50 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: casandra
+  #namespace: jaeger-poc
+  labels:
+    app: casandra
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: casandra
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: casandra
+    spec:
+      containers:
+        - image: cassandra:4.0
+          name: casandra
+          ports:
+            - containerPort: 9042
+              name: casandra-port
+
+
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: casandra-service
+  #namespace: jaeger-poc
+  labels:
+    app: casandra
+spec:
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 9042 
+      targetPort: 9042 
+      name: casandra-port
+      #nodePort: 30042
+  selector:
+    app: casandra
+

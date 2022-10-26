@@ -1,0 +1,9 @@
+resources:
+  - dp-casandra.yml
+  - dp-casandra-schema.yml
+  - dp-collector.yml
+  - dp-daemonset.yml
+  - dp-query.yml
+  - dp-app.yml
+  - ing.yml
+  - hpa.yml

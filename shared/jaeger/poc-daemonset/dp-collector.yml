@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: jaeger-colector
+  #namespace: jaeger-poc
+  labels:
+    app: jaeger-colector
+spec:
+  selector:
+    matchLabels:
+      app: jaeger-colector
+  serviceName: jaeger-colector-service
+  replicas: 3 
+  template:
+    metadata:
+      labels:
+        app: jaeger-colector
+    spec:
+      containers:
+        - image: jaegertracing/jaeger-collector:1.38
+          args: 
+            [
+              "--cassandra.keyspace=jaeger_v1_dc1",
+              "--cassandra.servers=casandra-service",
+              "--collector.zipkin.host-port=9411",
+              "--sampling.initial-sampling-probability=.5",
+              "--sampling.target-samples-per-second=.01",
+            ]
+          name: jaeger-colector
+          resources:
+          env:
+            - name: SAMPLING_CONFIG_TYPE
+              value: adaptive
+          ports:
+            - containerPort: 14268
+              name: jaeger-thrift
+            - containerPort: 14269
+              name: admin
+            - containerPort: 14250
+              name: grpc
+            - containerPort: 9411
+              name: json-proto
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger-colector-service
+  #namespace: jaeger-poc
+  labels:
+    app: jaeger-colector
+spec:
+  type: ClusterIP
+  ports:
+    - name: admin
+      appProtocol: http
+      port: 14269 #porta admin: verificação de integridade em /e métricas em/metrics
+      targetPort: 14269
+      #nodePort: 30069
+
+    - name: jaeger-thrift
+      appProtocol: http
+      port: 14268 #pode aceitar spans diretamente de clientes no formato jaeger.thrift sobre o protocolo binário de economia
+      targetPort: 14268
+      #nodePort: 30068
+
+    - name: grpc
+      appProtocol: grpc
+      port: 14250 #usado pelo jaeger-agent para enviar spans no formato model.proto
+      targetPort: 14250
+      #nodePort: 30050
+
+    - name: json-proto
+      appProtocol: http
+      port: 9411 #pode aceitar extensões Zipkin em Thrift, JSON e Proto (desativado por padrão)
+      targetPort: 9411
+      #nodePort: 30011
+
+
+  selector:
+    app: jaeger-colector
+
+
+

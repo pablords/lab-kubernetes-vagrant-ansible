@@ -1,0 +1,43 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: proxy
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: dev.jaeger.query.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: jaeger-query-service
+            port:
+              number: 16686
+
+  - host: dev.jaeger.collector.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: jaeger-colector-service
+            port:
+              number: 14250
+
+
+  - host: dev.hotrod.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hotrod-service
+            port:
+              number: 3000
+
+
+

@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jaeger-query
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jaeger-query
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: jaeger-query
+    spec:
+      containers:
+        - name: jaeger-query
+          image: jaegertracing/jaeger-query
+          args:
+            [
+              "--cassandra.keyspace=jaeger_v1_dc1",
+              "--cassandra.servers=casandra-service"
+            ]
+          ports:
+            - containerPort: 16686
+              name: ui-port
+            - containerPort: 16687
+              name: internal-port
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger-query-service
+  #namespace: jaeger-poc
+  labels:
+    app: jaeger-query
+spec:
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 16686
+      targetPort: 16686
+      name: ui-port
+
+    - protocol: TCP
+      port: 16687
+      targetPort: 16687
+      name: internal-port
+
+  selector:
+    app: jaeger-query
+
