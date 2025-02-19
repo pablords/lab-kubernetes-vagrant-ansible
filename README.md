@@ -26,7 +26,7 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 ## 💻  Como executar
 
 - Clone o repositório.
-- Na raiz do projeto digite `vagrant up` e aguarde até que todas vms são provisionadas.
+- Na raiz do projeto digite `vagrant up --provider=virtualbox` e aguarde até que todas vms são provisionadas.
 - Para acessar alguma vm é só digitar o comando `vagrant ssh {nome_vm}`.
 - Em sua maquina Local aponte o ip 192.168.56.240 para `dev.wordpress.com.br` em /etc/hosts no linux e mac
 - Para rodar a aplicacão de teste Wordpress com Mysql acesse a vm master e digite o comando: `cd /home/vagrant/shared/wordpress && kubectl apply -k .`
